@@ -2,11 +2,17 @@
 .home-container {
   background-color: #f8f9fa;
   padding: 80px 0;
+  background-image: url(../Images/homepage_book.jpeg);
+  background-size: cover; /* Ensures the image covers the entire container */
+  background-position: center; /* Center the background image */
+  width: 100%; /* Adjust width as needed */
+  height: 1020px; /* Adjust height as needed */
+  color: #343a40;
 }
 
 .home-content {
   text-align: center;
-  max-width: 600px;
+  max-width: auto;
   margin: 0 auto;
 }
 
@@ -14,9 +20,53 @@
   font-size: 3rem;
   font-weight: bold;
   color: #343a40;
+  text-align: center;
+  width: 100%;
 }
 
 .home-description {
   font-size: 1.5rem;
-  color: #6c757d;
+  color: #783142;
+  text-align: center;
+}
+
+.home-section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #343a40;
+}
+
+.home-section-description {
+  font-size: 1.25rem;
+  color: #d5dadf;
+}
+
+.home-feature-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #3d3f42;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  color: #d5dadf;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.text-align-left {
+  text-align: left;
+
+  margin: 30px;
+}
+strong {
+  color: #3d3f42;
 }

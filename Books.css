@@ -5,8 +5,3 @@
   ); /* Adjust height as needed, subtracting header and footer height */
   overflow-y: auto;
 }
-
-.button {
-  width: 100px;
-  height: 50px;
-}
