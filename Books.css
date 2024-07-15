@@ -1,0 +1,12 @@
+/* src/css/Books.css */
+.books-container {
+  max-height: calc(
+    100vh - 200px
+  ); /* Adjust height as needed, subtracting header and footer height */
+  overflow-y: auto;
+}
+
+.button {
+  width: 100px;
+  height: 50px;
+}

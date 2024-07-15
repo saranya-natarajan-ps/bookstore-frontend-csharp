@@ -1,0 +1,35 @@
+/* src/css/Footer.css */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#root,
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.footer {
+  background-color: #0b184100;
+  padding: 1rem 0;
+  width: 100%;
+  flex-shrink: 0;
+  position: relative;
+  bottom: 0;
+}
+
+.footer .list-inline {
+  margin-bottom: 0;
+}
+
+.footer .list-inline-item {
+  margin-left: 10px;
+}
+
+.footer .text-right {
+  text-align: right;
+}

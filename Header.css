@@ -1,0 +1,13 @@
+/* src/components/Header.css */
+.custom-navbar {
+  height: 100px; /* Adjust the height as needed */
+}
+
+.custom-logo {
+  height: 80px; /* Adjust the logo height as needed */
+  width: auto;
+}
+
+.header .text-right {
+  text-align: right;
+}
