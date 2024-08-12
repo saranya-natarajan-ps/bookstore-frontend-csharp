@@ -1,4 +1,3 @@
-// src/components/Genres.js
 import React, { useState, useEffect } from "react";
 import axios from "../axiosConfig";
 import GenresModal from "./GenresModal";
@@ -9,25 +8,31 @@ const Genres = () => {
   const [showModal, setShowModal] = useState(false);
   const [filter, setFilter] = useState("");
   const [filteredGenres, setFilteredGenres] = useState([]);
+  const [editingGenre, setEditingGenre] = useState(null);
 
   useEffect(() => {
     fetchGenres();
   }, []);
 
   useEffect(() => {
-    setFilteredGenres(
-      genres.filter(
-        (genre) =>
-          genre.genre_name.toLowerCase().includes(filter.toLowerCase()) ||
-          genre.genre_id.toString().includes(filter)
-      )
-    );
+    if (filter.length >= 3) {
+      setFilteredGenres(
+        genres.filter(
+          (genre) =>
+            genre.genreName.toLowerCase().includes(filter.toLowerCase()) ||
+            genre.genreId.toString().includes(filter)
+        )
+      );
+    } else {
+      setFilteredGenres(genres); // Show all genres if filter length is less than 3
+    }
   }, [filter, genres]);
 
   const fetchGenres = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/genres");
+      const response = await axios.get("http://localhost:5009/api/genres");
       setGenres(response.data);
+      setFilteredGenres(response.data);
     } catch (error) {
       console.error("Error fetching genres:", error);
     }
@@ -35,10 +40,21 @@ const Genres = () => {
 
   const handleShowModal = () => {
     setShowModal(true);
+    setEditingGenre(null); // Reset editingGenre when adding a new genre
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleFormSubmit = () => {
+    fetchGenres(); // Refresh the list of genres after adding or editing a genre
+    handleCloseModal();
+  };
+
+  const handleEditClick = (genre) => {
+    setEditingGenre(genre);
+    setShowModal(true);
   };
 
   return (
@@ -54,6 +70,9 @@ const Genres = () => {
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />
+        {filter.length > 0 && filter.length < 3 && (
+          <p className="text-muted mt-2">Please enter at least 3 characters to filter.</p>
+        )}
       </div>
       <div style={{ maxHeight: "1000px" }}>
         <Table striped bordered hover>
@@ -61,19 +80,33 @@ const Genres = () => {
             <tr>
               <th>Id</th>
               <th>Genre Name</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredGenres.map((genre) => (
-              <tr key={genre.genre_id}>
-                <td>{genre.genre_id}</td>
-                <td>{genre.genre_name}</td>
+              <tr key={genre.genreId}>
+                <td>{genre.genreId}</td>
+                <td>{genre.genreName}</td>
+                <td>
+                  <Button
+                    variant="primary"
+                    onClick={() => handleEditClick(genre)}
+                  >
+                    Edit
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
         </Table>
       </div>
-      <GenresModal show={showModal} handleClose={handleCloseModal} />
+      <GenresModal
+        show={showModal}
+        handleClose={handleCloseModal}
+        onFormSubmit={handleFormSubmit}
+        genre={editingGenre} // Pass the genre to the modal if editing
+      />
     </div>
   );
 };

@@ -16,11 +16,11 @@ const BookDetailsModal = ({ show, handleClose, book }) => {
             <Card.Title>{book.title}</Card.Title>
             <Card.Text>
               <strong>Author:</strong>{" "}
-              {book.Author ? book.Author.name : "Unknown Author"} <br />
+              {book.author ? book.author.authorName : "Unknown Author"} <br />
               <strong>Genre:</strong>
-              {book.Genre ? book.Genre.genre_name : "Unknown Genre"} <br />
+              {book.genre ? book.genre.genreName : "Unknown Genre"} <br />
               <strong>Price:</strong> {book.price} <br />
-              <strong>Publication Date:</strong> {book.publication_date}
+              <strong>Publication Date:</strong> {book.publicationDate}
             </Card.Text>
           </Card.Body>
         </Card>

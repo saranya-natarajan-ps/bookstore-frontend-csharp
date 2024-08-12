@@ -22,22 +22,29 @@ const Books = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredBooks(
-      books.filter(
-        (book) =>
-          book.title.toLowerCase().includes(filter.toLowerCase()) ||
-          (book.Author &&
-            book.Author.name.toLowerCase().includes(filter.toLowerCase())) ||
-          book.Genre.genre_name.toLowerCase().includes(filter.toLowerCase())
-      )
-    );
+    if (filter.length >= 3) {
+      setFilteredBooks(
+        books.filter(
+          (book) =>
+            book.title.toLowerCase().includes(filter.toLowerCase()) ||
+            (book.author &&
+              book.author.authorName
+                .toLowerCase()
+                .includes(filter.toLowerCase())) ||
+            book.genre.genreName.toLowerCase().includes(filter.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredBooks(books);
+    }
   }, [filter, books]);
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/books");
+      const response = await axios.get("http://localhost:5009/api/books");
+      //console.log(response.data);
       setBooks(response.data);
-      setFilteredBooks(response.data);
+      setFilteredBooks(response.data); // Initialize filteredBooks with all books
     } catch (error) {
       console.error("Error fetching books:", error);
     }
@@ -45,7 +52,7 @@ const Books = () => {
 
   const deleteBook = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/books/${id}`);
+      await axios.delete(`http://localhost:5009/api/books/${id}`);
       fetchBooks();
     } catch (error) {
       console.error("Error deleting book:", error);
@@ -114,16 +121,19 @@ const Books = () => {
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />
+        {filter.length < 3 && filter.length > 0 && (
+          <p className="text-muted mt-2">Please enter at least 3 characters to filter.</p>
+        )}
       </div>
       <Row>
         {currentBooks.map((book) => (
-          <Col key={book.book_id} sm={6} md={4} lg={3} className="mb-3">
+          <Col key={book.bookId} sm={6} md={4} lg={3} className="mb-3">
             <Card onClick={() => handleImageClick(book)}>
               <Card.Img variant="top" src={book.image} alt={book.title} />
               <Card.Body>
                 <Card.Title>{book.title}</Card.Title>
                 <Card.Text>
-                  {book.Author ? book.Author.name : "Unknown Author"}
+                  {book.author ? book.author.authorName : "Unknown Author"}
                 </Card.Text>
                 <Button
                   variant="primary"
@@ -134,7 +144,7 @@ const Books = () => {
                 <Button
                   variant="secondary"
                   className="m-lg-2"
-                  onClick={(e) => handleDeleteClick(e, book.book_id)}
+                  onClick={(e) => handleDeleteClick(e, book.bookId)}
                 >
                   Delete
                 </Button>

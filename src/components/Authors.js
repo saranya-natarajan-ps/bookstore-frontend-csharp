@@ -19,32 +19,39 @@ const Authors = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredAuthors(
-      authors.filter(
-        (author) =>
-          author.name.toLowerCase().includes(filter.toLowerCase()) ||
-          author.author_id.toString().includes(filter)
-      )
-    );
+    if (filter.length >= 3) {
+      setFilteredAuthors(
+        authors.filter(
+          (author) =>
+            (author.authorName &&
+              author.authorName.toLowerCase().includes(filter.toLowerCase())) ||
+            (author.authorId &&
+              author.authorId.toString().includes(filter))
+        )
+      );
+    } else {
+      setFilteredAuthors(authors);
+    }
   }, [filter, authors]);
 
   const fetchAuthors = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/authors");
+      const response = await axios.get("http://localhost:5009/api/authors");
       setAuthors(response.data);
+      setFilteredAuthors(response.data);
     } catch (error) {
       console.error("Error fetching authors:", error);
     }
   };
 
-  const deleteAuthor = async (id) => {
+  /*const deleteAuthor = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/authors/${id}`);
+      await axios.delete(`http://localhost:5009/api/authors/${id}`);
       fetchAuthors();
     } catch (error) {
       console.error("Error deleting author:", error);
     }
-  };
+  };*/
 
   const handleEditClick = (author) => {
     setEditingAuthor(author);
@@ -73,11 +80,11 @@ const Authors = () => {
   const offset = currentPage * itemsPerPage;
   const currentAuthors = filteredAuthors.slice(offset, offset + itemsPerPage);
 
-  const handleDeleteClick = (id) => {
+  /*const handleDeleteClick = (id) => {
     if (window.confirm("Are you sure you want to delete this author?")) {
       deleteAuthor(id);
     }
-  };
+  };*/
 
   return (
     <div className="container">
@@ -92,6 +99,9 @@ const Authors = () => {
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />
+        {filter.length < 3 && filter.length > 0 && (
+          <p className="text-muted mt-2">Please enter at least 3 characters to filter.</p>
+        )}
       </div>
       <div style={{ maxHeight: "800px", overflowY: "auto" }}>
         <Table striped bordered hover>
@@ -105,9 +115,9 @@ const Authors = () => {
           </thead>
           <tbody>
             {currentAuthors.map((author) => (
-              <tr key={author.author_id}>
-                <td>{author.author_id}</td>
-                <td className="actions-column">{author.name}</td>
+              <tr key={author.authorId}>
+                <td>{author.authorId}</td>
+                <td className="actions-column">{author.authorName}</td>
                 <td>{author.biography}</td>
                 <td className="actions-column">
                   <Button
@@ -115,13 +125,6 @@ const Authors = () => {
                     onClick={() => handleEditClick(author)}
                   >
                     Edit
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="m-lg-2"
-                    onClick={() => handleDeleteClick(author.author_id)}
-                  >
-                    Delete
                   </Button>
                 </td>
               </tr>
